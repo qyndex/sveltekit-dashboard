@@ -33,17 +33,21 @@
   </nav>
 </div>
 
-<div class="stats-grid">
-  {#each data.stats as stat}
-    <StatsCard {stat} />
-  {/each}
-</div>
+{#if activeTab === "overview" || activeTab === "revenue"}
+  <div class="stats-grid">
+    {#each data.stats as stat}
+      <StatsCard {stat} />
+    {/each}
+  </div>
 
-<div class="charts-row">
-  <RevenueChart data={data.revenueByMonth} />
-</div>
+  <div class="charts-row">
+    <RevenueChart data={data.revenueByMonth} />
+  </div>
+{/if}
 
-<UsersTable users={filteredUsers} />
+{#if activeTab === "overview" || activeTab === "users"}
+  <UsersTable users={filteredUsers} searchQuery={data.searchQuery} />
+{/if}
 
 <style>
   .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }

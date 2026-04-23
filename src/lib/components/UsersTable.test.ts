@@ -4,9 +4,9 @@ import { describe, it, expect } from "vitest";
 import UsersTable from "./UsersTable.svelte";
 
 const users = [
-  { id: "1", name: "Alice Chen", email: "alice@example.com", role: "Admin", status: "active", joined: "2025-01-15" },
-  { id: "2", name: "Bob Smith", email: "bob@example.com", role: "Editor", status: "active", joined: "2025-02-20" },
-  { id: "3", name: "Carol White", email: "carol@example.com", role: "Viewer", status: "inactive", joined: "2025-03-05" },
+  { id: "1", name: "Alice Chen", email: "alice@example.com", role: "Admin", status: "active", joined: "2025-01-15", avatar_url: null },
+  { id: "2", name: "Bob Smith", email: "bob@example.com", role: "Editor", status: "active", joined: "2025-02-20", avatar_url: null },
+  { id: "3", name: "Carol White", email: "carol@example.com", role: "Viewer", status: "inactive", joined: "2025-03-05", avatar_url: null },
 ];
 
 describe("UsersTable", () => {
@@ -53,7 +53,7 @@ describe("UsersTable", () => {
     expect(screen.getByRole("region", { name: "Users table" })).toBeTruthy();
   });
 
-  it("filters users when searching by name", async () => {
+  it("filters users when searching by name (client-side)", async () => {
     render(UsersTable, { props: { users } });
     const search = screen.getByRole("searchbox", { name: "Search users" });
     await userEvent.type(search, "alice");
@@ -62,7 +62,7 @@ describe("UsersTable", () => {
     expect(screen.queryByText("Carol White")).toBeNull();
   });
 
-  it("filters users when searching by email", async () => {
+  it("filters users when searching by email (client-side)", async () => {
     render(UsersTable, { props: { users } });
     const search = screen.getByRole("searchbox", { name: "Search users" });
     await userEvent.type(search, "bob@");
@@ -82,5 +82,24 @@ describe("UsersTable", () => {
     const search = screen.getByRole("searchbox", { name: "Search users" });
     await userEvent.type(search, "zzznomatch");
     expect(screen.getByText("No users found.")).toBeTruthy();
+  });
+
+  it("renders avatar placeholders with first letter", () => {
+    render(UsersTable, { props: { users } });
+    expect(screen.getByText("A")).toBeTruthy(); // Alice's initial
+    expect(screen.getByText("B")).toBeTruthy(); // Bob's initial
+    expect(screen.getByText("C")).toBeTruthy(); // Carol's initial
+  });
+
+  it("renders edit buttons for each user", () => {
+    render(UsersTable, { props: { users } });
+    const editButtons = screen.getAllByText("Edit");
+    expect(editButtons.length).toBe(3);
+  });
+
+  it("accepts searchQuery prop for initial search value", () => {
+    render(UsersTable, { props: { users, searchQuery: "alice" } });
+    const search = screen.getByRole("searchbox", { name: "Search users" }) as HTMLInputElement;
+    expect(search.value).toBe("alice");
   });
 });

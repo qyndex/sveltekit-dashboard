@@ -2,21 +2,29 @@
   import "../app.css";
   import Sidebar from "$lib/components/Sidebar.svelte";
   import Topbar from "$lib/components/Topbar.svelte";
+  import { page } from "$app/stores";
 
   let { children } = $props();
 
   let sidebarOpen = $state(true);
+
+  // Auth routes use their own layout (no sidebar/topbar)
+  let isAuthRoute = $derived($page.url.pathname.startsWith("/auth"));
 </script>
 
-<div class="layout" class:sidebar-collapsed={!sidebarOpen}>
-  <Sidebar bind:open={sidebarOpen} />
-  <div class="main">
-    <Topbar on:toggle={() => (sidebarOpen = !sidebarOpen)} />
-    <main class="content">
-      {@render children()}
-    </main>
+{#if isAuthRoute}
+  {@render children()}
+{:else}
+  <div class="layout" class:sidebar-collapsed={!sidebarOpen}>
+    <Sidebar bind:open={sidebarOpen} />
+    <div class="main">
+      <Topbar ontoggle={() => (sidebarOpen = !sidebarOpen)} />
+      <main class="content">
+        {@render children()}
+      </main>
+    </div>
   </div>
-</div>
+{/if}
 
 <style>
   .layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }

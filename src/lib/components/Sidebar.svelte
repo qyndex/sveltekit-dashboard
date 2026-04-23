@@ -5,16 +5,13 @@
   let { open = $bindable(true) }: Props = $props();
 
   const nav = [
-    { href: "/", icon: "⊞", label: "Overview" },
-    { href: "/users", icon: "👥", label: "Users" },
-    { href: "/revenue", icon: "💰", label: "Revenue" },
-    { href: "/settings", icon: "⚙️", label: "Settings" },
+    { href: "/", icon: "\u229E", label: "Dashboard" },
   ];
 </script>
 
 <aside class="sidebar" class:collapsed={!open} aria-label="Sidebar navigation">
   <div class="brand">
-    <span class="logo" aria-hidden="true">◈</span>
+    <span class="logo" aria-hidden="true">&#9672;</span>
     {#if open}<span class="name">AdminKit</span>{/if}
   </div>
   <nav>
