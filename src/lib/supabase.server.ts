@@ -6,8 +6,8 @@ import type { Database } from "$lib/types/database";
 
 export function createSupabaseServer(cookies: Cookies) {
   return createServerClient<Database>(
-    env.PUBLIC_SUPABASE_URL!,
-    env.PUBLIC_SUPABASE_ANON_KEY!,
+    env.PUBLIC_SUPABASE_URL ?? "http://localhost:54321",
+    env.PUBLIC_SUPABASE_ANON_KEY ?? "placeholder",
     {
       cookies: {
         getAll() {
@@ -29,7 +29,7 @@ export function createSupabaseAdmin(cookies: Cookies) {
     throw new Error("SUPABASE_SERVICE_ROLE_KEY is required for admin operations");
   }
   return createServerClient<Database>(
-    env.PUBLIC_SUPABASE_URL!,
+    env.PUBLIC_SUPABASE_URL ?? "http://localhost:54321",
     serviceRoleKey,
     {
       cookies: {
